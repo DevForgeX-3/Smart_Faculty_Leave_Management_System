@@ -5,9 +5,10 @@ const connectDB = async () => {
     const mongoURI = 
       process.env.MONGODB_URI || 
       process.env.MONGO_URL || 
-      'mongodb://127.0.0.1:27017/smart_faculty_leave_db';
+      'mongodb+srv://faculty_leave:leave_123@interviewforgeai.e9regcd.mongodb.net/faculty_leave_db?appName=InterviewForgeAI';
     const conn = await mongoose.connect(mongoURI);
     console.log(`[MongoDB Connected]: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
     console.error(`[MongoDB Connection Error]: ${error.message}`);
     process.exit(1);

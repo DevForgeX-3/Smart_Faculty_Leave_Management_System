@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         'Please provide a valid institutional email address',
       ],
     },
@@ -54,10 +54,10 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: {
-        values: ['Faculty', 'HOD', 'Admin'],
+        values: ['Faculty', 'HOD', 'Admin', 'faculty', 'hod', 'admin'],
         message: '{VALUE} is not a valid role. Allowed roles: Faculty, HOD, Admin',
       },
-      default: 'Faculty', // Requirement: Crucially default to Faculty
+      default: 'faculty',
     },
     department: {
       type: String,
@@ -67,10 +67,10 @@ const userSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['Pending', 'Approved', 'Rejected'],
-        message: '{VALUE} is not a valid status. Allowed status: Pending, Approved, Rejected',
+        values: ['Pending', 'Approved', 'Rejected', 'active', 'approved'],
+        message: '{VALUE} is not a valid status',
       },
-      default: 'Pending', // Requirement: Crucially default to Pending
+      default: 'Approved',
     },
     leaveBalances: {
       type: leaveBalanceSchema,
@@ -78,6 +78,14 @@ const userSchema = new mongoose.Schema(
     },
 
     // Extended professional fields from the registration onboarding UI
+    mobile: {
+      type: String,
+      trim: true,
+    },
+    photoUrl: {
+      type: String,
+      trim: true,
+    },
     employeeId: {
       type: String,
       trim: true,
@@ -101,8 +109,71 @@ const userSchema = new mongoose.Schema(
     },
     employmentType: {
       type: String,
-      enum: ['Permanent', 'Contract', 'Visiting'],
       default: 'Permanent',
+    },
+    dob: {
+      type: String,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      trim: true,
+    },
+    bloodGroup: {
+      type: String,
+      trim: true,
+    },
+    alternateEmail: {
+      type: String,
+      trim: true,
+    },
+    cabinRoom: {
+      type: String,
+      trim: true,
+    },
+    residentialAddress: {
+      type: String,
+      trim: true,
+    },
+    currentCity: {
+      type: String,
+      trim: true,
+    },
+    currentState: {
+      type: String,
+      trim: true,
+    },
+    postalCode: {
+      type: String,
+      trim: true,
+    },
+    emergencyContactName: {
+      type: String,
+      trim: true,
+    },
+    emergencyContactPhone: {
+      type: String,
+      trim: true,
+    },
+    almaMater: {
+      type: String,
+      trim: true,
+    },
+    specialization: {
+      type: String,
+      trim: true,
+    },
+    orcidId: {
+      type: String,
+      trim: true,
+    },
+    scopusId: {
+      type: String,
+      trim: true,
+    },
+    biometricId: {
+      type: String,
+      trim: true,
     },
   },
   {
@@ -139,6 +210,12 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
+  if (userObject.role) {
+    userObject.role = userObject.role.toLowerCase();
+  }
+  if (!userObject.fullName && userObject.name) {
+    userObject.fullName = userObject.name;
+  }
   return userObject;
 };
 

@@ -9,8 +9,11 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB & Seed default data
+connectDB().then(() => {
+  const { seedDefaultData } = require('./config/seeder');
+  seedDefaultData();
+});
 
 const path = require('path');
 
@@ -24,6 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // API Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/departments', require('./routes/departments'));
+app.use('/api/leaves', require('./routes/leaves'));
 
 // Root API info fallback (if not requesting HTML)
 app.get('/api', (req, res) => {

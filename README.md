@@ -149,8 +149,8 @@ cd Smart_Faculty_Leave_Management_System
 
 ---
 
-### Step 2: Configure Environment Variables
-Create a `.env` file in the root directory by copying the example template:
+### Step 2: Configure Environment Variables (Optional)
+The backend is already pre-configured to connect to MongoDB Atlas cloud database by default. If you wish to use a custom `.env` file, copy `.env.example`:
 
 ```bash
 # On Windows (PowerShell)
@@ -160,66 +160,91 @@ Copy-Item .env.example .env
 cp .env.example .env
 ```
 
-Open the newly created `.env` file and configure your credentials:
-
-```env
-PORT=5000
-MONGODB_URI=mongodb://127.0.0.1:27017/smart_faculty_leave_db
-NODE_ENV=development
-JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
-JWT_EXPIRES_IN=7d
-```
-
 ---
 
 ### Step 3: Install Dependencies
-
-Install dependencies for both the root backend and the React frontend:
 
 ```bash
 # 1. Install root backend dependencies
 npm install
 
-# 2. Install client frontend dependencies
-cd client
-npm install
-cd ..
+# 2. (Optional) Install client frontend dependencies for development
+npm install --prefix client
 ```
 
 ---
 
-### Step 4: Start Development Servers
+---
 
-You can start both the backend server and frontend client concurrently with a single command:
+### Step 4: Start the Application
 
+#### Option A: Unified Full-Stack Application (Recommended)
+You can start the full application immediately with:
+
+```bash
+npm start
+```
+
+This starts the Express API server and serves the production-ready React client at **`http://localhost:5000`**.
+
+If you wish to run in developer live-reload mode (Vite + Express concurrently):
 ```bash
 npm run dev
 ```
-
-#### Individual Server Commands (Optional)
-If you prefer running services in separate terminal windows:
-
-- **Run Backend Only (Port 5000):**
-  ```bash
-  npm run server
-  ```
-- **Run Frontend Client Only (Port 5173):**
-  ```bash
-  npm run client
-  ```
-- **Production Backend Start:**
-  ```bash
-  npm start
-  ```
+- **Frontend Live Dev Server:** `http://localhost:5173`
+- **Backend API Server:** `http://localhost:5000`
 
 ---
 
-### Step 5: Access the Application
+#### Option B: Standalone Modular Backend Service (`smart-faculty-leave/server`)
+For microservice / modular backend development:
+```bash
+cd smart-faculty-leave/server
+npm install
+node seed.js    # Seed sample departments, users, and leave types
+npm run dev     # Starts server on port 5000 with nodemon
+```
 
-Once started, access the respective environments via your browser:
-- **Frontend Web Application:** [`http://localhost:5173`](http://localhost:5173)
-- **Backend API Base URL:** [`http://localhost:5000`](http://localhost:5000)
-- **API Health & Auth Endpoint:** [`http://localhost:5000/api/auth/me`](http://localhost:5000/api/auth/me)
+---
+
+### Step 5: Demo Login Credentials
+
+The system includes pre-seeded and verified accounts across all organizational tiers:
+
+| Role | Email | Password | Access Level |
+| :--- | :--- | :--- | :--- |
+| **Faculty Member** | `faculty@college.edu` | `Faculty@123` | Apply leave, track balances, view colleague proxy coverage |
+| **Department HOD** | `hod@college.edu` | `Hod@123` | Department review queue, approve/reject leaves with remarks |
+| **Administrator** | `admin@college.edu` | `Admin@123` | System governance, department management, user approvals |
+
+> **Tip:** You can also click the quick **1-Click Demo** buttons on the login screen for instant credential autofill and access!
+
+---
+
+### Step 6: Access & Verification Endpoints
+
+- **Interactive Web Application:** [`http://localhost:5000`](http://localhost:5000) (or `http://localhost:5173` in dev mode)
+- **API Health Check:** [`http://localhost:5000/api/health`](http://localhost:5000/api/health)
+- **Departments Directory:** [`http://localhost:5000/api/departments/public`](http://localhost:5000/api/departments/public)
+- **System Documentation Endpoint:** [`http://localhost:5000/api`](http://localhost:5000/api)
+
+---
+
+## API Endpoints Overview
+
+| Method | Endpoint | Description | Access |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Register new faculty/staff account | Public |
+| `POST` | `/api/auth/login` | Authenticate user & issue JWT | Public |
+| `GET` | `/api/auth/me` | Fetch current authenticated user profile | Private |
+| `GET` | `/api/departments/public`| List departments with HOD status | Public |
+| `GET` | `/api/departments/:name/faculty`| List faculty for selected department | Private |
+| `GET` | `/api/leaves/my-leaves` | Get authenticated user's leaves | Private |
+| `POST` | `/api/leaves/apply` | Submit new leave application | Private |
+| `GET` | `/api/leaves/department` | Get pending department leave requests | HOD / Admin |
+| `PATCH` | `/api/leaves/:id/status` | Approve or reject leave request | HOD / Admin |
+| `PATCH` | `/api/leaves/:id/cancel` | Cancel pending leave request | Faculty |
+| `GET` | `/api/leaves/all` | View institution-wide leave registry | Admin |
 
 ---
 

@@ -11,7 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#F8FAFC] text-slate-800 antialiased font-sans min-h-screen w-full">
-    <div id="root"></div>
+    <div id="root">
+      <div id="app-initial-loader" style="position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:#F8FAFC;font-family:sans-serif;z-index:9999;">
+        <div style="width:36px;height:36px;border:3px solid #E2E8F0;border-top-color:#2563EB;border-radius:50%;animation:initialSpin 0.8s linear infinite;"></div>
+        <p style="margin-top:14px;font-size:12px;font-weight:600;color:#64748B;letter-spacing:0.025em;">Loading Portal...</p>
+      </div>
+      <style>
+        @keyframes initialSpin {
+          to { transform: rotate(360deg); }
+        }
+      </style>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

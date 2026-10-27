@@ -35,6 +35,13 @@ const protect = async (req, res, next) => {
       });
     }
 
+    if (user.status === 'Rejected') {
+      return res.status(403).json({
+        success: false,
+        message: 'Account has been deactivated. Please contact the administrator.',
+      });
+    }
+
     req.user = user;
     next();
   } catch (error) {
@@ -52,7 +59,9 @@ const protect = async (req, res, next) => {
  */
 const authorize = (...roles) => {
   return (req, res, next) => {
-    if (!req.user || !roles.includes(req.user.role)) {
+    const userRole = (req.user?.role || '').toLowerCase();
+    const allowedRoles = roles.map((r) => r.toLowerCase());
+    if (!req.user || !allowedRoles.includes(userRole)) {
       return res.status(403).json({
         success: false,
         message: `Forbidden: User role '${req.user ? req.user.role : 'Guest'}' is not authorized to access this resource.`,

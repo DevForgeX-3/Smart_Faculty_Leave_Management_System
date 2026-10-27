@@ -51,3 +51,28 @@
 .animate-fade-in {
   animation: fadeInFast 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+@keyframes autoRotateProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-rotate-progress {
+  animation: autoRotateProgress 4.8s linear forwards;
+}
+
+@keyframes loadingSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
